@@ -2,17 +2,36 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render
+from django.views.generic import View
+from django.core.urlresolvers import reverse_lazy
 
-# Create your views here.
+from dashboard.utils.views import AdminViewMixin, paginate
+from .models import User, Electricity
 
 
-def summary(request):
-  context = {
-      'message': 'Hello!',
-  }
-  return render(request, 'consumption/summary.html', context)
+class SummaryView(AdminViewMixin, View):
+    breadcrumbs = [
+        {'name': 'Summary', 'url': '#'}
+    ]
 
-def detail(request):
-  context = {
-  }
-  return render(request, 'consumption/detail.html', context)
+    def get(self, request, *args, **kwargs):
+        user_list = User.objects
+        context = kwargs['context']
+        context.update({
+            'user_list': user_list
+        })
+        return render(request, 'consumption/summary.html', context)
+
+
+class DetailView(AdminViewMixin, View):
+    breadcrumbs = [
+        {'name': 'Summary', 'url': reverse_lazy('consumption:summary')},
+        {'name': 'Detail', 'url': '#'},
+    ]
+
+    def get(self, request, *args, **kwargs):
+        user = User.objects.get(pk=kwargs['user_id'])
+        context.update({
+            'user': user
+        })
+        return render(request, 'consumption/detail.html', context)

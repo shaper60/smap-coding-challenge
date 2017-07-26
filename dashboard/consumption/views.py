@@ -21,11 +21,12 @@ class SummaryView(AdminViewMixin, View):
         summarydata = DataPool(
             series = [{
                 'options': {
-                    'source': Electricity.objects.extra({'month': "strftime('%%Y%%m', datetime)"}).values('month').annotate(avg_consumption=Avg('consumption'))
+                    'source': Electricity.objects.extra({'month': "strftime('%%Y%%m', datetime)"}).values('month').annotate(avg_consumption=Avg('consumption'), sum_consumption=Sum('consumption'))
                 },
                 'terms': [
                     'month',
-                    'avg_consumption'
+                    'avg_consumption',
+                    'sum_consumption'
                 ]
             }]
 
@@ -40,7 +41,8 @@ class SummaryView(AdminViewMixin, View):
                 },
                 'terms': {
                     'month' : [
-                        'avg_consumption'
+                        'avg_consumption',
+                        'sum_consumption'
                     ]
                 }
             }],

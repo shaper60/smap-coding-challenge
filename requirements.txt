@@ -47,5 +47,6 @@ tablib==0.11.5
 traitlets==4.3.2
 unicodecsv==0.14.1
 wcwidth==0.1.7
+Werkzeug==0.12.2
 xlrd==1.0.0
 xlwt==1.2.0

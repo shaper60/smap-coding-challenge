@@ -19,7 +19,7 @@ class SummaryView(AdminViewMixin, View):
 
     def get(self, request, *args, **kwargs):
         summarydata = DataPool(
-            series = [{
+            series=[{
                 'options': {
                     'source': Electricity.objects.extra({'month': "strftime('%%Y%%m', datetime)"}).values('month').annotate(avg_consumption=Avg('consumption'), sum_consumption=Sum('consumption'))
                 },
@@ -33,8 +33,8 @@ class SummaryView(AdminViewMixin, View):
         )
 
         cht = Chart(
-            datasource = summarydata,
-            series_options = [{
+            datasource=summarydata,
+            series_options=[{
                 'options': {
                     'type': 'line',
                     'stacking': False
@@ -46,7 +46,7 @@ class SummaryView(AdminViewMixin, View):
                     ]
                 }
             }],
-            chart_options = {
+            chart_options={
                 'title': {
                     'text': 'Summary　Chart'
                 },
@@ -74,11 +74,50 @@ class DetailView(AdminViewMixin, View):
     ]
 
     def get(self, request, *args, **kwargs):
+        summarydata = DataPool(
+            series=[{
+                'options': {
+                    'source': Electricity.objects.filter(user=User.objects.get(pk=kwargs['user_id'])).extra({'month': "strftime('%%Y%%m', datetime)"}).values('month').annotate(avg_consumption=Avg('consumption'), sum_consumption=Sum('consumption'))
+                },
+                'terms': [
+                    'month',
+                    'avg_consumption',
+                    'sum_consumption'
+                ]
+            }]
+
+        )
+
+        cht = Chart(
+            datasource=summarydata,
+            series_options=[{
+                'options': {
+                    'type': 'line',
+                    'stacking': False
+                },
+                'terms': {
+                    'month' : [
+                        'avg_consumption',
+                        'sum_consumption'
+                    ]
+                }
+            }],
+            chart_options={
+                'title': {
+                    'text': 'Summary　Chart'
+                },
+                'xAxis': {
+                    'title': {
+                        'text': 'month'
+                    }
+                }
+            }
+        )
         user = User.objects.get(pk=kwargs['user_id'])
         electricity_list = user.electricity_set.all()
-        print electricity_list
         context = kwargs['context']
         context.update({
+            'summarychart': cht,
             'user': user,
             'electricity_list': electricity_list
         })

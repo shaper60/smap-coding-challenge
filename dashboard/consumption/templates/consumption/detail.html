@@ -1,5 +1,8 @@
+{% extends 'generics/base.html' %}
 {% block content %}
+
 <h1>Detail</h1>
+<div id='container'>HERE.</div>
 <ul>
   <li>{{user.id}}</li>
   <li>{{user.area}}</li>
@@ -19,4 +22,5 @@
   {% endfor %}
   </tbody>
 </table>
+
 {% endblock %}

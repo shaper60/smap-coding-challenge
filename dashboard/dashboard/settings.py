@@ -40,6 +40,7 @@ INSTALLED_APPS += (
     # Third parties
     'import_export',
     'bootstrap_pagination',
+    'chartit',
     # My Apps
     'consumption',
 )

@@ -1,6 +1,8 @@
+{% load staticfiles %}
 <!DOCTYPE html>
 <html lang="ja">
   <head>
+    <script src="https://code.highcharts.com/highcharts.src.js"></script>
   </head>
   <body>
     {% include "generics/partials/sidebar.html" %}
@@ -9,5 +11,6 @@
     {% block content %}
     {% endblock %}
     {% include "generics/partials/footer.html" %}
+    <script src="{% static 'jquery-3.2.1.js' %}"></script>
   </body>
 </html>

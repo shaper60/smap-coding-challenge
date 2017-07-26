@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from django.shortcuts import render
 from django.views.generic import View
 from django.core.urlresolvers import reverse_lazy
+from django.db.models import Avg, Sum
 
 from chartit import DataPool, Chart
 
@@ -20,11 +21,11 @@ class SummaryView(AdminViewMixin, View):
         summarydata = DataPool(
             series = [{
                 'options': {
-                    'source': Electricity.objects.all()[:10]
+                    'source': Electricity.objects.extra({'month': "strftime('%%Y%%m', datetime)"}).values('month').annotate(avg_consumption=Avg('consumption'))
                 },
                 'terms': [
-                    'datetime',
-                    'consumption'
+                    'month',
+                    'avg_consumption'
                 ]
             }]
 
@@ -38,18 +39,18 @@ class SummaryView(AdminViewMixin, View):
                     'stacking': False
                 },
                 'terms': {
-                    'datetime' : [
-                        'consumption'
+                    'month' : [
+                        'avg_consumption'
                     ]
                 }
             }],
             chart_options = {
                 'title': {
-                    'text': 'Summary'
+                    'text': 'Summary　Chart'
                 },
                 'xAxis': {
                     'title': {
-                        'text': 'Hoge'
+                        'text': 'month'
                     }
                 }
             }

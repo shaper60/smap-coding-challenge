@@ -5,6 +5,8 @@ from django.shortcuts import render
 from django.views.generic import View
 from django.core.urlresolvers import reverse_lazy
 
+from chartit import DataPool, Chart
+
 from dashboard.utils.views import AdminViewMixin, paginate
 from .models import User, Electricity
 
@@ -15,9 +17,48 @@ class SummaryView(AdminViewMixin, View):
     ]
 
     def get(self, request, *args, **kwargs):
+        summarydata = DataPool(
+            series = [{
+                'options': {
+                    'source': Electricity.objects.all()[:10]
+                },
+                'terms': [
+                    'datetime',
+                    'consumption'
+                ]
+            }]
+
+        )
+
+        cht = Chart(
+            datasource = summarydata,
+            series_options = [{
+                'options': {
+                    'type': 'line',
+                    'stacking': False
+                },
+                'terms': {
+                    'datetime' : [
+                        'consumption'
+                    ]
+                }
+            }],
+            chart_options = {
+                'title': {
+                    'text': 'Summary'
+                },
+                'xAxis': {
+                    'title': {
+                        'text': 'Hoge'
+                    }
+                }
+            }
+        )
+
         user_list = User.objects.all()
         context = kwargs['context']
         context.update({
+            'summarychart': cht,
             'user_list': user_list
         })
         return render(request, 'consumption/summary.html', context)

@@ -15,7 +15,7 @@ class SummaryView(AdminViewMixin, View):
     ]
 
     def get(self, request, *args, **kwargs):
-        user_list = User.objects
+        user_list = User.objects.all()
         context = kwargs['context']
         context.update({
             'user_list': user_list
@@ -31,7 +31,11 @@ class DetailView(AdminViewMixin, View):
 
     def get(self, request, *args, **kwargs):
         user = User.objects.get(pk=kwargs['user_id'])
+        electricity_list = user.electricity_set.all()
+        print electricity_list
+        context = kwargs['context']
         context.update({
-            'user': user
+            'user': user,
+            'electricity_list': electricity_list
         })
         return render(request, 'consumption/detail.html', context)

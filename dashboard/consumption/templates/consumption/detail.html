@@ -1,3 +1,22 @@
 {% block content %}
-
+<h1>Detail</h1>
+<ul>
+  <li>{{user.id}}</li>
+  <li>{{user.area}}</li>
+  <li>{{user.tariff}}</li>
+</ul>
+<table>
+  <thead>
+    <tr>Datetime</tr>
+    <tr>Consumption</tr>
+  </thead>
+  <tbody>
+  {% for electricity in electricity_list %}
+    <tr>
+      <td>{{electricity.datetime}}</td>
+      <td>{{electricity.consumption}}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
 {% endblock %}

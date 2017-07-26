@@ -35,6 +35,15 @@ class Command(BaseCommand):
                         'datetime': row[0],
                         'consumption': row[1]
                     }
+                    sample = {
+                        'user': user.id,
+                        'datetime': row[0],
+                        'consumption': row[1]
+                    }
+                    print sample
 
                     if not Electricity.objects.filter(user=info['user'], datetime=info['datetime']):
+                        print 'save!'
                         Electricity(**info).save()
+                    else:
+                        print 'pass!'

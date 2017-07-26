@@ -1,6 +1,5 @@
 appnope==0.1.0
 backports.shutil-get-terminal-size==1.0.0
-bdd==0.2
 behave==1.2.5
 decorator==4.1.1
 diff-match-patch==20121119

@@ -21,6 +21,7 @@ class SummaryView(AdminViewMixin, View):
         chart = ConsumptionChart(source=source, title='Summary')
         line_chart = chart.line_chart()
         user_list = User.objects.all()
+        user_list = paginate(request, user_list, 10)
         context = kwargs['context']
         context.update({
             'chart': line_chart,
@@ -41,6 +42,7 @@ class DetailView(AdminViewMixin, View):
         line_chart = chart.line_chart()
         user = User.objects.get(pk=kwargs['user_id'])
         electricity_list = user.electricity_set.all()
+        electricity_list = paginate(request, electricity_list, 10)
         context = kwargs['context']
         context.update({
             'chart': line_chart,

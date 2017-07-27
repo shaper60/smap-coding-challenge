@@ -8,17 +8,21 @@
 {% endblock %}
 
 {% block content %}
-
-<div id='container'>HERE.</div>
-<ul>
-  <li>{{user.id}}</li>
-  <li>{{user.area}}</li>
-  <li>{{user.tariff}}</li>
-</ul>
-<table>
+<div id="container">HERE.</div>
+<h3>User Info</h3>
+<dl>
+  <dt>id</dt>
+  <dd>{{user.id}}</dd>
+  <dt>area</dt>
+  <dd>{{user.area}}</dd>
+  <dt>tariff</dt>
+  <dd>{{user.tariff}}</dd>
+</dl>
+<h3>Cunsumption List</h3>
+<table class="table table-hover">
   <thead>
-    <tr>Datetime</tr>
-    <tr>Consumption</tr>
+    <th>Datetime</th>
+    <th>Consumption</th>
   </thead>
   <tbody>
   {% for electricity in electricity_list %}
@@ -29,5 +33,4 @@
   {% endfor %}
   </tbody>
 </table>
-
 {% endblock %}

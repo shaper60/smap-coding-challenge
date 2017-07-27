@@ -2,17 +2,29 @@
 <!DOCTYPE html>
 <html lang="ja">
   <head>
+    <title>{% block title %}TOP{% endblock %} - SMAP</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    {% block styles %}{% endblock %}
     <script src="{% static 'jquery-3.2.1.js' %}"></script>
     <script src="https://code.highcharts.com/highcharts.src.js"></script>
     {% load chartit %}
-    {{ summarychart|load_charts:"container" }}
+    {% block chart %}{% endblock %}
   </head>
   <body>
-    {% include "generics/partials/sidebar.html" %}
-    {% include "generics/partials/header.html" %}
-    {% include "generics/partials/breadcrumbs.html" %}
-    {% block content %}
-    {% endblock %}
-    {% include "generics/partials/footer.html" %}
+    <div>
+      {% include "generics/partials/sidebar.html" %}
+      <div>
+        {% include "generics/partials/top-navbar.html" %}
+        <div>
+          <div>
+            {% include "generics/partials/breadcrumbs.html" %}
+            {% block content %}{% endblock %}
+          </div>
+        </div>
+      </div>
+      {% include "generics/partials/footer.html" %}
+    </div>
+    {% block scripts %}{% endblock %}
   </body>
 </html>

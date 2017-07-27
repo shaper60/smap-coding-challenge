@@ -8,6 +8,10 @@ from consumption.models import User, Electricity
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
+        self._store_user_data()
+        self._store_electricity_data()
+
+    def _store_user_data(self, *args, **options):
         with open('dashboard/data/user_data.csv', 'r') as f:
             rows = csv.reader(f)
             next(rows)
@@ -23,6 +27,7 @@ class Command(BaseCommand):
                 except:
                     User(**info).save()
 
+    def _store_electricity_data(self, *args, **kwargs):
         for fn in glob('dashboard/data/consumption/*.csv'):
             user_id = fn.replace('dashboard/data/consumption/', '').replace('.csv', '')
             user = User.objects.get(pk=user_id)
@@ -35,15 +40,6 @@ class Command(BaseCommand):
                         'datetime': row[0],
                         'consumption': row[1]
                     }
-                    sample = {
-                        'user': user.id,
-                        'datetime': row[0],
-                        'consumption': row[1]
-                    }
-                    print sample
 
                     if not Electricity.objects.filter(user=info['user'], datetime=info['datetime']):
-                        print 'save!'
                         Electricity(**info).save()
-                    else:
-                        print 'pass!'

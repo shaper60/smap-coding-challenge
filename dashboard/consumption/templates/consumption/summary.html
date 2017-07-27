@@ -1,7 +1,14 @@
 {% extends 'generics/base.html' %}
+
+{% block title %}Summary{% endblock %}
+
+{% block chart %}
+{% load chartit %}
+{{ chart|load_charts:"container" }}
+{% endblock %}
+
 {% block content %}
 
-<h1>Summary</h1>
 <div id='container'>HERE.</div>
 <table>
   <thead>

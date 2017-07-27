@@ -17,15 +17,20 @@ class SummaryView(AdminViewMixin, View):
     ]
 
     def get(self, request, *args, **kwargs):
-        source = Electricity.objects.extra({'month': "strftime('%%Y%%m', datetime)"}).values('month').annotate(avg_consumption=Avg('consumption'), sum_consumption=Sum('consumption'))
+        user_list = paginate(request, User.objects.all(), 10)
+
+        source = Electricity.objects \
+                     .extra({'month': "strftime('%%Y%%m', datetime)"}) \
+                     .values('month') \
+                     .annotate(avg_consumption=Avg('consumption'),
+                               sum_consumption=Sum('consumption'))
         chart = ConsumptionChart(source=source, title='Summary')
         line_chart = chart.line_chart()
-        user_list = User.objects.all()
-        user_list = paginate(request, user_list, 10)
+        
         context = kwargs['context']
         context.update({
+            'user_list': user_list,
             'chart': line_chart,
-            'user_list': user_list
         })
         return render(request, 'consumption/summary.html', context)
 
@@ -37,16 +42,23 @@ class DetailView(AdminViewMixin, View):
     ]
 
     def get(self, request, *args, **kwargs):
-        source = Electricity.objects.filter(user=User.objects.get(pk=kwargs['user_id'])).extra({'month': "strftime('%%Y%%m', datetime)"}).values('month').annotate(avg_consumption=Avg('consumption'), sum_consumption=Sum('consumption'))
-        chart = ConsumptionChart(source=source, title='Detail')
-        line_chart = chart.line_chart()
         user = User.objects.get(pk=kwargs['user_id'])
-        electricity_list = user.electricity_set.all()
-        electricity_list = paginate(request, electricity_list, 10)
+
+        electricity_list = paginate(request, user.electricity_set.all(), 10)
+
+        source = Electricity.objects \
+                     .filter(user=user)  \
+                     .extra({'month': "strftime('%%Y%%m', datetime)"}) \
+                     .values('month') \
+                     .annotate(avg_consumption=Avg('consumption'),
+                               sum_consumption=Sum('consumption'))
+        cht = ConsumptionChart(source=source, title='Detail')
+        line_chart = cht.line_chart()
+
         context = kwargs['context']
         context.update({
-            'chart': line_chart,
             'user': user,
-            'electricity_list': electricity_list
+            'electricity_list': electricity_list,
+            'chart': line_chart,
         })
         return render(request, 'consumption/detail.html', context)
